@@ -11,7 +11,10 @@ export default function Dashboard() {
     <main className="min-h-screen text-white flex flex-col" style={{background: "#080808"}}>
       <nav className="flex items-center justify-between px-8 py-5 border-b" style={{borderColor: "#1a1a1a"}}>
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-sm" style={{background: "linear-gradient(135deg, #FF6B00, #FF9A00)"}}></div>
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+  <polygon points="14,2 26,9 26,21 14,28 2,21 2,9" fill="none" stroke="#FF6B00" strokeWidth="1.5"/>
+  <circle cx="14" cy="15" r="4" fill="#FF6B00"/>
+</svg>
           <Link href="/" className="text-lg font-bold tracking-tight">shado</Link>
         </div>
         <div className="flex items-center gap-3">
