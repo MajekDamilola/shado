@@ -1,27 +1,15 @@
-import type { Metadata } from "next";
-import { Syne } from "next/font/google";
 import "./globals.css";
+import ThemeInit from "./components/ThemeInit";
+import ClientProviders from "./components/ClientProviders";
 
-const syne = Syne({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-syne",
-});
-
-export const metadata: Metadata = {
-  title: "Shado — Private Crypto Payments",
-  description: "Send crypto to a handle, not an address. Private by default.",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${syne.variable} font-sans antialiased`}>
-        {children}
+      <body>
+        <ThemeInit />
+        <ClientProviders>
+          {children}
+        </ClientProviders>
       </body>
     </html>
   );
