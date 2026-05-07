@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useWallet, WalletName } from "@demox-labs/miden-wallet-adapter";
 
 export default function Dashboard() {
-  const { wallets, select, wallet, disconnect, connecting, connected, accountId } = useWallet();
+  const { wallets, select, wallet, disconnect, connecting, connected } = useWallet();
   const [activeTab, setActiveTab] = useState<"send" | "receive" | null>(null);
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
@@ -42,7 +42,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full" style={{boxShadow: "0 0 6px #4ade80"}}></div>
               <span className="text-sm" style={{color: "var(--text-muted)"}}>
-                {accountId ? `${accountId.toString().slice(0, 8)}...` : "Connected"}
+                {"Connected"}
               </span>
               <button onClick={() => disconnect()} className="text-xs px-3 py-1.5 rounded-lg" style={{
                 background: "rgba(128,128,128,0.1)", color: "var(--text-muted)", border: "1px solid rgba(128,128,128,0.15)"
@@ -103,14 +103,13 @@ export default function Dashboard() {
               <p className="text-xs uppercase tracking-widest mb-3" style={{color: "var(--text-muted)", opacity: 0.5}}>Private balance</p>
               <h2 style={{fontSize: "48px", fontWeight: "800", letterSpacing: "-2px", color: "var(--text-main)"}}>$0.00</h2>
               <p className="text-xs mt-3" style={{color: "var(--text-muted)", opacity: 0.3}}>Only you can see this</p>
-              {accountId && (
-                <div className="mt-4 px-3 py-2 rounded-lg inline-block" style={{background: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.1)"}}>
-                  <p className="text-xs" style={{color: "#FF6B00", fontFamily: "monospace"}}>
-                    {accountId.toString().slice(0, 12)}...{accountId.toString().slice(-8)}
-                  </p>
-                </div>
-              )}
-            </div>
+              {wallet && (
+  <div className="mt-4 px-3 py-2 rounded-lg inline-block" style={{background: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.1)"}}>
+    <p className="text-xs" style={{color: "#FF6B00", fontFamily: "monospace"}}>
+      Miden wallet connected
+    </p>
+  </div>
+)}
 
             <div className="grid grid-cols-2 gap-3">
               <button onClick={() => setActiveTab(activeTab === "send" ? null : "send")} className="py-4 rounded-xl font-semibold text-sm transition" style={{
@@ -156,10 +155,10 @@ export default function Dashboard() {
                 <div className="rounded-xl px-5 py-6 text-center border" style={{background: "var(--bg-main)", borderColor: "rgba(128,128,128,0.15)"}}>
                   <p className="text-xs mb-2" style={{color: "var(--text-muted)", opacity: 0.5}}>Your account</p>
                   <p style={{fontSize: "13px", fontWeight: "700", color: "#FF6B00", fontFamily: "monospace", wordBreak: "break-all"}}>
-                    {accountId ? accountId.toString() : "—"}
-                  </p>
+  {wallet ? wallet.adapter.name : "—"}
+</p>
                 </div>
-                <button onClick={() => accountId && navigator.clipboard.writeText(accountId.toString())} className="w-full py-3.5 rounded-xl text-sm font-semibold border transition" style={{
+                <button onClick={() => wallet && navigator.clipboard.writeText(wallet.adapter.name)}
                   background: "rgba(128,128,128,0.08)", color: "var(--text-main)", borderColor: "rgba(128,128,128,0.15)"
                 }}>Copy account ID</button>
               </div>
