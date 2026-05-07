@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    turbo: {
-      resolveExtensions: [".tsx", ".ts", ".jsx", ".js"],
-    },
-  },
+  turbopack: {},
   webpack: (config) => {
     config.experiments = {
       ...config.experiments,

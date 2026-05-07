@@ -4,21 +4,20 @@ import Link from "next/link";
 import { useWallet, WalletName } from "@demox-labs/miden-wallet-adapter";
 
 export default function Dashboard() {
-  const { wallets, select, connect, disconnect, connecting, connected, accountId } = useWallet();
+  const { wallets, select, wallet, disconnect, connecting, connected, accountId } = useWallet();
   const [activeTab, setActiveTab] = useState<"send" | "receive" | null>(null);
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
 
   const handleConnect = async () => {
-    try {
-      if (wallets.length > 0) {
-        select(wallets[0].adapter.name as WalletName);
-        await connect();
-      }
-    } catch (err) {
-      console.error("Connect error:", err);
+  try {
+    if (wallets.length > 0) {
+      select(wallets[0].adapter.name as WalletName);
     }
-  };
+  } catch (err) {
+    console.error("Connect error:", err);
+  }
+};
 
   return (
     <main className="min-h-screen flex flex-col" style={{background: "var(--bg-main)", color: "var(--text-main)"}}>
