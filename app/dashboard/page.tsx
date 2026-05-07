@@ -1,13 +1,24 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { useWallet } from "@demox-labs/miden-wallet-adapter";
+import { useWallet, WalletName } from "@demox-labs/miden-wallet-adapter";
 
 export default function Dashboard() {
-  const { wallet, accountId, connect, disconnect, connecting, connected } = useWallet();
+  const { wallets, select, connect, disconnect, connecting, connected, accountId } = useWallet();
   const [activeTab, setActiveTab] = useState<"send" | "receive" | null>(null);
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
+
+  const handleConnect = async () => {
+    try {
+      if (wallets.length > 0) {
+        select(wallets[0].adapter.name as WalletName);
+        await connect();
+      }
+    } catch (err) {
+      console.error("Connect error:", err);
+    }
+  };
 
   return (
     <main className="min-h-screen flex flex-col" style={{background: "var(--bg-main)", color: "var(--text-main)"}}>
@@ -32,7 +43,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full" style={{boxShadow: "0 0 6px #4ade80"}}></div>
               <span className="text-sm" style={{color: "var(--text-muted)"}}>
-                {accountId ? `${accountId.toString().slice(0, 6)}...${accountId.toString().slice(-4)}` : "Connected"}
+                {accountId ? `${accountId.toString().slice(0, 8)}...` : "Connected"}
               </span>
               <button onClick={() => disconnect()} className="text-xs px-3 py-1.5 rounded-lg" style={{
                 background: "rgba(128,128,128,0.1)", color: "var(--text-muted)", border: "1px solid rgba(128,128,128,0.15)"
@@ -40,7 +51,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <button
-              onClick={() => connect()}
+              onClick={handleConnect}
               disabled={connecting}
               className="text-sm font-semibold px-5 py-2.5 rounded-xl transition"
               style={{background: "linear-gradient(135deg, #FF6B00, #FF8C00)", color: "#fff", boxShadow: "0 0 20px rgba(255,107,0,0.25)"}}
@@ -66,13 +77,25 @@ export default function Dashboard() {
               Connect your Miden extension wallet to access your private dashboard.
             </p>
             <button
-              onClick={() => connect()}
+              onClick={handleConnect}
               disabled={connecting}
               className="px-8 py-3.5 rounded-xl font-semibold text-sm transition"
               style={{background: "linear-gradient(135deg, #FF6B00, #FF8C00)", color: "#fff", boxShadow: "0 0 30px rgba(255,107,0,0.3)"}}
             >
               {connecting ? "Connecting..." : "Connect Miden Wallet →"}
             </button>
+
+            {/* Show available wallets */}
+            {wallets.length === 0 && (
+              <p className="mt-6 text-xs" style={{color: "var(--text-muted)", opacity: 0.5}}>
+                No Miden wallet detected. Please install the Miden extension.
+              </p>
+            )}
+            {wallets.length > 0 && (
+              <p className="mt-6 text-xs" style={{color: "#FF6B00", opacity: 0.7}}>
+                ✓ Miden wallet detected
+              </p>
+            )}
           </div>
         ) : (
           <>
@@ -133,7 +156,7 @@ export default function Dashboard() {
                 <p className="text-xs uppercase tracking-widest" style={{color: "#FF6B00"}}>Receive</p>
                 <div className="rounded-xl px-5 py-6 text-center border" style={{background: "var(--bg-main)", borderColor: "rgba(128,128,128,0.15)"}}>
                   <p className="text-xs mb-2" style={{color: "var(--text-muted)", opacity: 0.5}}>Your account</p>
-                  <p style={{fontSize: "14px", fontWeight: "700", color: "#FF6B00", fontFamily: "monospace", wordBreak: "break-all"}}>
+                  <p style={{fontSize: "13px", fontWeight: "700", color: "#FF6B00", fontFamily: "monospace", wordBreak: "break-all"}}>
                     {accountId ? accountId.toString() : "—"}
                   </p>
                 </div>
