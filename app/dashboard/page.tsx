@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useWallet, WalletName } from "@demox-labs/miden-wallet-adapter";
 
@@ -8,6 +8,12 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"send" | "receive" | null>(null);
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
+  const [userHandle, setUserHandle] = useState<string>("anon");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("shado-handle");
+    if (saved) setUserHandle(saved);
+  }, []);
 
   const handleConnect = async () => {
     try {
@@ -41,7 +47,7 @@ export default function Dashboard() {
           {connected ? (
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-400 rounded-full" style={{boxShadow: "0 0 6px #4ade80"}}></div>
-              <span className="text-sm" style={{color: "var(--text-muted)"}}>Connected</span>
+              <span className="text-sm" style={{color: "var(--text-muted)"}}>@{userHandle}</span>
               <button
                 onClick={() => disconnect()}
                 className="text-xs px-3 py-1.5 rounded-lg"
@@ -91,7 +97,7 @@ export default function Dashboard() {
             )}
             {wallets.length > 0 && (
               <p className="mt-6 text-xs" style={{color: "#FF6B00", opacity: 0.7}}>
-                Miden wallet detected
+                ✓ Miden wallet detected
               </p>
             )}
           </div>
@@ -99,13 +105,19 @@ export default function Dashboard() {
           <>
             <div className="rounded-2xl p-8 relative overflow-hidden" style={{background: "var(--bg-card)", border: "1px solid rgba(128,128,128,0.1)"}}>
               <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-10 pointer-events-none" style={{background: "#FF6B00"}}></div>
-              <p className="text-xs uppercase tracking-widest mb-3" style={{color: "var(--text-muted)", opacity: 0.5}}>Private balance</p>
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-xs uppercase tracking-widest" style={{color: "var(--text-muted)", opacity: 0.5}}>Private balance</p>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400" style={{boxShadow: "0 0 6px #4ade80"}}></div>
+                  <span className="text-xs font-medium" style={{color: "#FF6B00"}}>@{userHandle}</span>
+                </div>
+              </div>
               <h2 style={{fontSize: "48px", fontWeight: "800", letterSpacing: "-2px", color: "var(--text-main)"}}>$0.00</h2>
               <p className="text-xs mt-3" style={{color: "var(--text-muted)", opacity: 0.3}}>Only you can see this</p>
               {wallet && (
                 <div className="mt-4 px-3 py-2 rounded-lg inline-block" style={{background: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.1)"}}>
                   <p className="text-xs" style={{color: "#FF6B00", fontFamily: "monospace"}}>
-                    Miden wallet connected
+                    ✓ Miden wallet connected
                   </p>
                 </div>
               )}
@@ -121,7 +133,7 @@ export default function Dashboard() {
                   border: activeTab === "send" ? "1px solid #FF6B00" : "1px solid rgba(128,128,128,0.1)"
                 }}
               >
-                Send
+                ↑ Send
               </button>
               <button
                 onClick={() => setActiveTab(activeTab === "receive" ? null : "receive")}
@@ -132,7 +144,7 @@ export default function Dashboard() {
                   border: activeTab === "receive" ? "1px solid #FF6B00" : "1px solid rgba(128,128,128,0.1)"
                 }}
               >
-                Receive
+                ↓ Receive
               </button>
             </div>
 
@@ -170,7 +182,7 @@ export default function Dashboard() {
                     cursor: sendHandle && sendAmount ? "pointer" : "not-allowed"
                   }}
                 >
-                  Send to @{sendHandle || "handle"}
+                  Send to @{sendHandle || "handle"} →
                 </button>
               </div>
             )}
@@ -179,20 +191,18 @@ export default function Dashboard() {
               <div className="rounded-2xl p-6 flex flex-col gap-4" style={{background: "var(--bg-card)", border: "1px solid rgba(128,128,128,0.1)"}}>
                 <p className="text-xs uppercase tracking-widest" style={{color: "#FF6B00"}}>Receive</p>
                 <div className="rounded-xl px-5 py-6 text-center" style={{background: "var(--bg-main)", border: "1px solid rgba(128,128,128,0.15)"}}>
-                  <p className="text-xs mb-2" style={{color: "var(--text-muted)", opacity: 0.5}}>Your wallet</p>
-                  <p className="text-sm font-bold" style={{color: "#FF6B00", fontFamily: "monospace"}}>
-                    {wallet ? wallet.adapter.name : "Not connected"}
-                  </p>
+                  <p className="text-xs mb-2" style={{color: "var(--text-muted)", opacity: 0.5}}>Your handle</p>
+                  <p style={{fontSize: "28px", fontWeight: "800", color: "#FF6B00"}}>@{userHandle}</p>
                 </div>
                 <p className="text-xs text-center" style={{color: "var(--text-muted)", opacity: 0.5}}>
                   Share your handle. They send — you receive privately.
                 </p>
                 <button
-                  onClick={() => wallet && navigator.clipboard.writeText(wallet.adapter.name)}
+                  onClick={() => navigator.clipboard.writeText(`@${userHandle}`)}
                   className="w-full py-3.5 rounded-xl text-sm font-semibold"
                   style={{background: "rgba(128,128,128,0.08)", color: "var(--text-main)", border: "1px solid rgba(128,128,128,0.15)"}}
                 >
-                  Copy wallet name
+                  Copy @{userHandle}
                 </button>
               </div>
             )}
