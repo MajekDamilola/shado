@@ -1,0 +1,13 @@
+[package]
+name = "shado-registry"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "deploy"
+path = "src/main.rs"
+
+[dependencies]
+miden-client = { version = "0.9", features = ["concurrent", "tonic", "sqlite"] }
+tokio = { version = "1", features = ["full"] }
+tonic = "0.9"

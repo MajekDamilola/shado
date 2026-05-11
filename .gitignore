@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+shado-registry/target/
+shado-registry/target/
+shado-registry/keystore/
+shado-registry/store.sqlite3
