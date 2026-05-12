@@ -11,8 +11,8 @@ export default function Dashboard() {
   const [balance, setBalance] = useState("0.00");
 
   useEffect(() => {
-    if (wallet?.accounts?.[0]?.id) {
-      fetch(`/api/balance?accountId=${wallet.accounts[0].id}`)
+    if (wallet?.publicKey) {
+      fetch(`/api/balance?accountId=${wallet.publicKey}`)
         .then(r => r.json())
         .then(d => setBalance(d.balance || "0.00"));
     }
