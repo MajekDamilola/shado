@@ -8,6 +8,7 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"send" | "receive" | null>(null);
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
+  const [balance, setBalance] = useState("0.00");
   const [userHandle, setUserHandle] = useState<string>("anon");
 
   useEffect(() => {
@@ -112,7 +113,7 @@ export default function Dashboard() {
                   <span className="text-xs font-medium" style={{color: "#FF6B00"}}>@{userHandle}</span>
                 </div>
               </div>
-              <h2 style={{fontSize: "48px", fontWeight: "800", letterSpacing: "-2px", color: "var(--text-main)"}}>$0.00</h2>
+              <h2 style={{fontSize: "48px", fontWeight: "800", letterSpacing: "-2px", color: "var(--text-main)"}}>${balance}</h2>
               <p className="text-xs mt-3" style={{color: "var(--text-muted)", opacity: 0.3}}>Only you can see this</p>
               {wallet && (
                 <div className="mt-4 px-3 py-2 rounded-lg inline-block" style={{background: "rgba(255,107,0,0.06)", border: "1px solid rgba(255,107,0,0.1)"}}>
