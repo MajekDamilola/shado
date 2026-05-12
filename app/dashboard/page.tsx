@@ -9,6 +9,14 @@ export default function Dashboard() {
   const [sendHandle, setSendHandle] = useState("");
   const [sendAmount, setSendAmount] = useState("");
   const [balance, setBalance] = useState("0.00");
+
+  useEffect(() => {
+    if (wallet?.accounts?.[0]?.id) {
+      fetch(`/api/balance?accountId=${wallet.accounts[0].id}`)
+        .then(r => r.json())
+        .then(d => setBalance(d.balance || "0.00"));
+    }
+  }, [wallet]);
   const [userHandle, setUserHandle] = useState<string>("anon");
 
   useEffect(() => {
