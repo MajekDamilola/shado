@@ -1,15 +1,14 @@
 "use client";
-import { WalletProvider, WalletModalProvider, MidenWalletAdapter } from "@demox-labs/miden-wallet-adapter";
-import "@demox-labs/miden-wallet-adapter/styles.css";
-
-const wallets = [new MidenWalletAdapter({ appName: "Shado" })];
+import React from "react";
+import { MidenFiSignerProvider } from "@miden-sdk/miden-wallet-adapter";
+import { MidenProvider } from "@miden-sdk/react";
 
 export default function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
-    <WalletProvider wallets={wallets} autoConnect>
-      <WalletModalProvider>
+    <MidenFiSignerProvider appName="Shado" network="testnet">
+      <MidenProvider config={{ rpcUrl: "testnet" }}>
         {children}
-      </WalletModalProvider>
-    </WalletProvider>
+      </MidenProvider>
+    </MidenFiSignerProvider>
   );
 }
