@@ -7,7 +7,7 @@ async fn main() {
 
     let endpoint = Endpoint::try_from("https://rpc.testnet.miden.io:443").unwrap();
 
-    let _client = ClientBuilder::new()
+    let mut client = ClientBuilder::new()
         .with_tonic_rpc_client(&endpoint, Some(10_000))
         .with_filesystem_keystore("./keystore")
         .with_sqlite_store("./store.sqlite3")
